@@ -1,0 +1,30 @@
+# .gitignore
+
+# --- SECRETS ---
+# Ignore environment files. This is the most important rule.
+.env
+
+# --- PYTHON ---
+# Ignore virtual environment folders
+env/
+venv/
+.venv/
+
+# Ignore Python cache files and compiled files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# --- ML MODEL CACHES ---
+# Ignore Hugging Face's default cache directory
+.cache/
+
+# Ignore Spacy models directory (good practice even if you're not using it now)
+.spacy/
+
+# --- IDE & EDITOR CONFIGURATION ---
+# Visual Studio Code
+.vscode/
+# JetBrains (PyCharm, etc.)
+.idea/

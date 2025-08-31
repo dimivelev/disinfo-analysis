@@ -21,6 +21,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Delete huge unnecessary tools folder
+        run: rm -rf /opt/hostedtoolcache
       # Step 1: Check out the repository's code so the runner can access it
       - name: Checkout repository
         uses: actions/checkout@v4
