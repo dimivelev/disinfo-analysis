@@ -57,7 +57,7 @@ WORKDIR /home/user/app
 COPY --from=builder /usr/local/lib/python3.9/site-packages /usr/local/lib/python3.9/site-packages
 COPY --from=builder /home/user/app/.cache /home/user/app/.cache
 COPY --from=builder /home/user/app/.spacy /home/user/app/.spacy
-
+COPY --from=builder /usr/local/bin /usr/local/bin  
 # Copy the application code
 COPY --chown=user:user main.py .
 COPY --chown=user:user agent.py .
