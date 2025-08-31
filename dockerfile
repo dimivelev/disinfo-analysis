@@ -1,7 +1,7 @@
 # Dockerfile
 
 # Stage 1: Build the application and download models
-FROM python:3.12.11-slim as builder
+FROM python:3.12.7 as builder
 
 # Set environment variables
 ENV PIP_NO_CACHE_DIR=off \
@@ -41,7 +41,7 @@ COPY --chown=user:user agent.py .
 
 
 # Stage 2: Create the final, smaller production image
-FROM python:3.12.11-slim
+FROM python:3.12.7
 
 # Set environment variables for the final image
 ENV HF_HOME="/home/user/app/.cache/huggingface" \
