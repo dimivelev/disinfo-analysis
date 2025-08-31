@@ -1,7 +1,7 @@
 # Dockerfile
 
 # Stage 1: Build the application and download models
-FROM python:3.12.7 as builder
+FROM python:3.12.11 as builder
 
 # Set environment variables
 ENV PIP_NO_CACHE_DIR=off \
@@ -19,7 +19,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Copy requirements and install Python dependencies
 COPY requirements.txt .
-RUN pip install crewai langchain langchain-huggingface transformers sentence-transformers lxml_html_clean spacy wikidata pandas newspaper3k torch "anthropic[vertex]"
+RUN pip install -r requirements.txt
 
 # Create a non-root user for security
 RUN useradd -m -u 1000 user
@@ -41,7 +41,7 @@ COPY --chown=user:user agent.py .
 
 
 # Stage 2: Create the final, smaller production image
-FROM python:3.12.7
+FROM python:3.12.11
 
 # Set environment variables for the final image
 ENV HF_HOME="/home/user/app/.cache/huggingface" \
