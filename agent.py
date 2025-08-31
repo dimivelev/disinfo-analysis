@@ -349,6 +349,6 @@ disinfo_crew = Crew(
     tasks=[headline_task, emotion_task, bias_task, fact_task,medical_task],
     #agents=[medical_agent],
     #tasks=[medical_task],
-    process=Process.sequential,
-    verbose=True # Using verbose level 2 for detailed output
+    process=Process.sequential
+     # Using verbose level 2 for detailed output
 )
