@@ -1,0 +1,41 @@
+# .dockerignore
+
+# Git
+.git
+.gitignore
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.env
+
+# Docker
+Dockerfile
+.dockerignore
+
+# IDEs
+.idea/
+.vscode/```
+
+### 4. Build and Run the Docker Container
+
+With all the files in place, you can now build and run your Docker container.
+
+1.  **Build the Docker image:**
+    Open your terminal in the project directory and run:
+    ```bash
+    docker build -t disinfo-analysis-api .
+    ```
+
+2.  **Run the Docker container:**
+    Once the build is complete, run the container with:
+    ```bash
+    docker run -p 8000:8000 disinfo-analysis-api
+    ```
+
+Your FastAPI application will now be running and accessible at `http://localhost:8000`. The machine learning models are included in the image, so it will be ready to handle requests without any download delays.

@@ -1,0 +1,57 @@
+# .github/workflows/main.yml
+
+name: CI/CD - Build and Push Docker Image
+
+# This workflow runs on every push to the 'main' branch
+on:
+  push:
+    branches:
+      - main
+
+# Define environment variables to be used in the jobs
+env:
+  # The name of your Docker Hub repository
+  # IMPORTANT: Replace 'your-username' with your actual Docker Hub username
+  DOCKER_IMAGE_NAME: test0198/disinfo-analysis-api
+
+jobs:
+  build-and-push:
+    name: Build and Push to Docker Hub
+    # Use the latest version of Ubuntu as the runner
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out the repository's code so the runner can access it
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Step 2: Set up QEMU for multi-platform builds (optional but good practice)
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      # Step 3: Set up Docker Buildx, which is a modern builder with more features
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # Step 4: Log in to Docker Hub using the secrets we configured
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # Step 5: Build the Docker image and push it to the registry
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          # The context is the directory where the Dockerfile is located
+          context: .
+          # Push the image to the registry after building
+          push: true
+          # Define the tags for the image
+          tags: |
+            ${{ env.DOCKER_IMAGE_NAME }}:latest
+            ${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }}
+          # Enable caching to speed up future builds
+          cache-from: type=inline
+          cache-to: type=inline,mode=max

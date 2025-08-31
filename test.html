@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Scientists Discover Water is Actually a Government Conspiracy to Control Your Mind</title>
+</head>
+<body>
+    <h1>Scientists Discover Water is Actually a Government Conspiracy to Control Your Mind</h1>
+    <p>Published: August 28, 2025</p>
+    <p>Authors: Dr. A. Nonymous</p>
+    <article>
+        <p>In a shocking turn of events that has left the global community reeling, a group of independent researchers today announced what they claim is definitive proof that common drinking water is embedded with nano-transmitters. These transmitters, they allege, are part of a decades-long secret government program aimed at subliminal mind control.</p>
+        <p>The lead researcher, who uses the pseudonym "Hydra," stated in a hastily arranged press conference, "They've been lying to us all along! Every sip you take connects you to their mainframe. They call it 'hydration,' we call it 'subjugation.' This is an outrage that will make everyone furious and terrified."</p>
+        <p>Established scientific bodies have universally dismissed these claims, citing a complete lack of verifiable evidence. However, the story has already gained significant traction on social media platforms, with the hashtag #WaterGate2 trending worldwide. The emotional outcry is palpable, as citizens express outrage and fear over the alleged manipulation. This is clearly an attack on our freedom, and only a fool would trust the mainstream narrative.</p>
+    </article>
+</body>
+</html>```
+
+---
+
+### How to Run the Project
+
+1.  **Create the Folder:** Create a new folder (e.g., `disinfo-api`) and place all the files (`agent.py`, `main.py`, `requirements.txt`, `test.html`, `.env`) inside it.
+
+2.  **Add Your API Key:** Open the `.env` file and replace `YOUR_API_KEY` with your actual Google Gemini API key.
+
+3.  **Install Dependencies:** Open a terminal, navigate into your `disinfo-api` folder, and run this command. It will install all the required packages.
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+4.  **Run the Server:** In the same terminal, start the FastAPI server with Uvicorn:
+    ```bash
+    uvicorn main:app --reload
+    ```
+    You should see output indicating that the server is running, typically on `http://127.0.0.1:8000`.
+
+5.  **Test the API:**
+    *   Open your web browser and go to **[http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)**.
+    *   You will see the interactive API documentation. Click on the `POST /analyze-html/` endpoint to expand it.
+    *   Click the **"Try it out"** button.
+    *   Click the **"Choose File"** button and select the `test.html` file from your project folder.
+    *   Click the blue **"Execute"** button.
+
+The system will now process the file, and after a short wait, the complete JSON analysis from the CrewAI agents will appear in the response body.
