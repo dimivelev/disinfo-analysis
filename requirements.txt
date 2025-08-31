@@ -1,8 +1,8 @@
 # Core CrewAI and LangChain
 crewai
-langchain-core==0.2.10
-langchain-huggingface==0.0.3
-langchain-anthropic==0.1.15
+langchain-Core
+langchain-huggingface
+langchain-anthropic
 
 # Core AI & ML Libraries
 transformers==4.42.3
