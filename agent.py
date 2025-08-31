@@ -16,7 +16,6 @@ from langchain_huggingface import HuggingFacePipeline
 from transformers import pipeline
 from sentence_transformers import SentenceTransformer, util
 import spacy
-from wikidata.client import Client
 import pandas as pd
 from newspaper import Article
 from typing import Dict, Any, Type
@@ -351,5 +350,5 @@ disinfo_crew = Crew(
     #agents=[medical_agent],
     #tasks=[medical_task],
     process=Process.sequential,
-    verbose=False # Using verbose level 2 for detailed output
+    verbose=True # Using verbose level 2 for detailed output
 )

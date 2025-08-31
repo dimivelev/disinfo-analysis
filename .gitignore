@@ -9,7 +9,7 @@
 env/
 venv/
 .venv/
-
+test/
 # Ignore Python cache files and compiled files
 __pycache__/
 *.pyc

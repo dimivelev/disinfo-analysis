@@ -14,6 +14,7 @@ env/
 venv/
 .env
 
+test/
 # Docker
 Dockerfile
 .dockerignore
