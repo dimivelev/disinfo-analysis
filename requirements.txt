@@ -1,12 +1,30 @@
+# Core CrewAI and LangChain
 crewai
-fastapi
-langchain_huggingface
-newspaper3k
-pandas
-pydantic
-python-dotenv
-sentence_transformers
-spacy
-torch
-transformers
-uvicorn
+langchain-Core
+langchain-huggingface
+langchain-anthropic
+
+# Core AI & ML Libraries
+transformers==4.42.3
+torch==2.3.1
+sentence-transformers==3.0.1
+accelerate==0.31.0
+
+# NLP and Data Handling
+spacy==3.7.5
+wikidata==0.7.0
+pandas==2.2.2
+newspaper3k==0.2.8
+lxml==5.2.2
+lxml_html_clean==0.1.1
+en_core_web_sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.7.1/en_core_web_sm-3.7.1-py3-none-any.whl
+
+# Environment & Type Hinting
+python-dotenv==1.0.1
+pydantic==2.7.4
+
+# API Server
+fastapi==0.111.0
+uvicorn[standard]==0.30.1
+python-multipart==0.0.9
+
