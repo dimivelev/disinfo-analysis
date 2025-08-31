@@ -7,6 +7,6 @@ pydantic
 python-dotenv
 sentence_transformers
 spacy
-torch1
+torch
 transformers
 uvicorn
