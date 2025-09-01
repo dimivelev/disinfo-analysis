@@ -6,6 +6,7 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import JSONResponse, StreamingResponse
 from pydantic import BaseModel
+from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 import asyncio
 import os
@@ -22,8 +23,6 @@ app = FastAPI(
     description="An API that accepts an HTML payload and analyzes its content for disinformation using a multi-agent CrewAI system.",
     version="1.0.1"
 )
-
-from fastapi.middleware.cors import CORSMiddleware
 
 app.add_middleware(
     CORSMiddleware,
@@ -48,14 +47,21 @@ async def run_crew_and_stream(inputs: dict):
         
         yield f"data: {json.dumps({'status': 'Agents are now analyzing the content...', 'type': 'update'})}\n\n"
         
-        result = await loop.run_in_executor(None, disinfo_crew.kickoff, inputs)
+        _ = await loop.run_in_executor(None, disinfo_crew.kickoff, inputs)
 
         yield f"data: {json.dumps({'status': 'Analysis complete!', 'type': 'update'})}\n\n"
         await asyncio.sleep(0.1)
 
-        # Step 3: Stream the final result AFTER converting it to a string
-        # THIS IS THE FIX: str(result)
-        final_data = {"source": "chrome-extension", "analysis_result": str(result)}
+        # Step 3: Collect all individual task outputs
+        all_results = {
+            'Headline Analyzer': disinfo_crew.tasks[0].output.raw,
+            'Emotional Manipulation Analyst': disinfo_crew.tasks[1].output.raw,
+            'Bias Detection Analyst': disinfo_crew.tasks[2].output.raw,
+            'Medical Detector': disinfo_crew.tasks[3].output.raw
+        }
+
+        # Step 4: Stream the final result as a dictionary of all outputs
+        final_data = {"source": "chrome-extension", "analysis_result": all_results}
         yield f"data: {json.dumps({'result': final_data, 'type': 'result'})}\n\n"
 
     except Exception as e:

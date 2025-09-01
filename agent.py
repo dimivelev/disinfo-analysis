@@ -255,7 +255,7 @@ headline_agent = Agent(
     backstory='An expert in Natural Language Understanding and semantic analysis, skilled at identifying discrepancies in text.',
     tools=[HeadlineSimilarityTool()],
     llm=llm,
-    verbose=False
+    verbose=True
 )
 
 emotion_agent = Agent(
@@ -264,7 +264,7 @@ emotion_agent = Agent(
     backstory='A psychologist specializing in computational linguistics, trained to identify manipulative language patterns.',
     tools=[EmotionalManipulationTool()],
     llm=llm,
-    verbose=False
+    verbose=True
 )
 '''
 fallacy_agent = Agent(
@@ -282,9 +282,9 @@ bias_agent = Agent(
     backstory='A seasoned journalist and media critic with expertise in identifying subtle and overt biases in news content.',
     tools=[BiasDetectionTool()],
     llm=llm,
-    verbose=False
+    verbose=True
 )
-
+'''
 fact_agent = Agent(
     role='Conspiracy theory detector',
     goal='To detect if text contains conspiracy or disinformation.',
@@ -293,6 +293,7 @@ fact_agent = Agent(
     llm=llm,
     verbose=False
 )
+'''
 medical_agent = Agent(
     role='Medical detector',
     goal='To detect if text contains conspiracy or disinformation.',
@@ -305,7 +306,7 @@ headline_task = Task(
     #description='Analyze the headline "{headline}" against the body of the article. Use the HeadlineSimilarity tool.',
     description='1. Use the HeadlineSimilarity tool to get a semantic similarity score between the headline "{headline}" and the body "{body}".\n2. Based on the score, determine if the headline is clickbait or an accurate representation of the content.',
     agent=headline_agent,
-    async_execution=True,
+    
     expected_output='A single sentence conclusion stating whether the headline is considered clickbait and the similarity score it was based on. Example: "The headline is likely clickbait, with a low similarity score of 0.45."'
 
 )
@@ -313,7 +314,6 @@ headline_task = Task(
 emotion_task = Task(
     description='Analyze the text "{body}" using the EmotionalManipulationMeter tool to identify the dominant emotions. The tool will provide a list of many emotions and their scores.',
     agent=emotion_agent,
-    async_execution=True,
     expected_output='A single sentence identifying the top one or two dominant emotions from the tool\'s output and an overall assessment of the emotional tone. Example: "The text is primarily driven by anger and disgust, creating a highly manipulative tone."'
 )
 '''
@@ -326,15 +326,15 @@ fallacy_task = Task(
 bias_task = Task(
     description='Use the BiasDetectionAnalyzer tool on the text "{body}". The tool will return three probabilities for [left, center, right] bias.',
     agent=bias_agent,
-    async_execution=True,
     expected_output='Based on the highest probability from the tool, provide the final classification. Your response MUST BE a: Left-Wing, Center, or Right-Wing.'
 )
+'''
 fact_task = Task(
     description='Use the FactClaimVerifier tool to analyze the text "{body}" for conspiratorial content. The tool will classify it as either "PRCT" (Potential Conspiracy Related Text) or "Non-PRCT".',
     agent=fact_agent,
-    async_execution=True,
     expected_output='A single-sentence verdict based on the tool\'s output. If the tool returns "PRCT", state that the text likely contains conspiracy theories. If it returns "Non-PRCT", state that it does not.'
 )
+'''
 medical_task = Task(
     description='Analyze the following text: "{body}". Your sole task is to identify if it contains conspiracy theories about Vaccines, GMOs, or 5G. Do not provide any explanation, reasoning, or thought processes. Your output must be a single, concise sentence.',
     agent=medical_agent,
@@ -345,10 +345,10 @@ medical_task = Task(
 
 # --- SETUP THE CREW ---
 disinfo_crew = Crew(
-    agents=[headline_agent, emotion_agent, bias_agent, fact_agent,medical_agent],
-    tasks=[headline_task, emotion_task, bias_task, fact_task,medical_task],
+    agents=[headline_agent, emotion_agent, bias_agent,medical_agent],
+    tasks=[headline_task, emotion_task, bias_task,medical_task],
     #agents=[medical_agent],
     #tasks=[medical_task],
-    process=Process.sequential
-     # Using verbose level 2 for detailed output
+    process=Process.sequential,
+    verbose=True # Using verbose level 2 for detailed output
 )
