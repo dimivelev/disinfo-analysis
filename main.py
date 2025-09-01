@@ -1,8 +1,4 @@
 # main.py
-# To run this file:
-# 1. Ensure all packages from requirements.txt are installed.
-# 2. In your terminal, run the command: uvicorn main:app --reload
-
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import JSONResponse, StreamingResponse
 from pydantic import BaseModel
@@ -10,10 +6,9 @@ from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 import asyncio
 import os
-import json # Import the json library
+import json
 
-# Import the crew and parsing function from your agent.py file
-from agent import disinfo_crew, parse_html_content_without_llm
+from agent import create_disinfo_crew, parse_html_content_without_llm
 
 class HtmlPayload(BaseModel):
     html: str
@@ -21,7 +16,7 @@ class HtmlPayload(BaseModel):
 app = FastAPI(
     title="Disinformation Analysis API",
     description="An API that accepts an HTML payload and analyzes its content for disinformation using a multi-agent CrewAI system.",
-    version="1.0.1"
+    version="1.0.3" # Incremented version
 )
 
 app.add_middleware(
@@ -32,41 +27,49 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# This async generator will be responsible for running the crew and streaming updates.
 async def run_crew_and_stream(inputs: dict):
-    """
-    An async generator that yields real-time updates from the CrewAI kickoff process.
-    """
+    crew = create_disinfo_crew()
+    
     try:
-        # Step 1: Announce that the analysis is starting
         yield f"data: {json.dumps({'status': 'Starting analysis...', 'type': 'update'})}\n\n"
         await asyncio.sleep(0.1) 
 
-        # Step 2: Run the CrewAI kickoff in a separate thread
         loop = asyncio.get_event_loop()
         
         yield f"data: {json.dumps({'status': 'Agents are now analyzing the content...', 'type': 'update'})}\n\n"
         
-        _ = await loop.run_in_executor(None, disinfo_crew.kickoff, inputs)
+        _ = await loop.run_in_executor(None, crew.kickoff, inputs)
 
-        yield f"data: {json.dumps({'status': 'Analysis complete!', 'type': 'update'})}\n\n"
+        yield f"data: {json.dumps({'status': 'Analysis complete! Collecting results...', 'type': 'update'})}\n\n"
         await asyncio.sleep(0.1)
 
-        # Step 3: Collect all individual task outputs
-        all_results = {
-            'Headline Analyzer': disinfo_crew.tasks[0].output.raw,
-            'Emotional Manipulation Analyst': disinfo_crew.tasks[1].output.raw,
-            'Bias Detection Analyst': disinfo_crew.tasks[2].output.raw,
-            'Medical Detector': disinfo_crew.tasks[3].output.raw
-        }
+        # ===================================================================
+        # --- START OF THE FIX ---
+        # We now safely check if each task produced an output before accessing it.
+        # This prevents the server from crashing if an agent fails.
+        # ===================================================================
+        def get_safe_output(task):
+            """Helper function to safely get raw output from a task."""
+            if task and task.output and hasattr(task.output, 'raw'):
+                return task.output.raw
+            # Provide a fallback message if output is missing
+            return "Error: This agent failed to produce a valid output."
 
-        # Step 4: Stream the final result as a dictionary of all outputs
+        all_results = {
+            'Headline Analyzer': get_safe_output(crew.tasks[0]),
+            'Emotional Manipulation Analyst': get_safe_output(crew.tasks[1]),
+            'Bias Detection Analyst': get_safe_output(crew.tasks[2]),
+            'Medical Detector': get_safe_output(crew.tasks[3])
+        }
+        # ===================================================================
+        # --- END OF THE FIX ---
+        # ===================================================================
+
         final_data = {"source": "chrome-extension", "analysis_result": all_results}
         yield f"data: {json.dumps({'result': final_data, 'type': 'result'})}\n\n"
 
     except Exception as e:
         import traceback
-        # Also print the error to the server console for better logging
         print(f"ERROR IN STREAM: {traceback.format_exc()}")
         error_message = f"An unexpected error occurred: {str(e)}"
         yield f"data: {json.dumps({'error': error_message, 'type': 'error'})}\n\n"
@@ -75,10 +78,6 @@ async def run_crew_and_stream(inputs: dict):
           summary="Analyze HTML content for disinformation (Streaming)",
           response_description="A stream of analysis updates followed by the final result.")
 async def analyze_html_streaming(payload: HtmlPayload):
-    """
-    This endpoint accepts a JSON payload with an 'html' key, parses the content,
-    and streams the CrewAI analysis process and final result.
-    """
     try:
         html_content_str = payload.html
         parsed_result = parse_html_content_without_llm(html_content_str)
@@ -91,15 +90,12 @@ async def analyze_html_streaming(payload: HtmlPayload):
             'body': parsed_result.get('body', '')
         }
 
-        # Return a StreamingResponse that uses the async generator
         return StreamingResponse(run_crew_and_stream(inputs), media_type="text/event-stream")
 
     except HTTPException as e:
-        # This will catch parsing errors before the stream starts
         return JSONResponse(content={"error": e.detail}, status_code=e.status_code)
     except Exception as e:
         return JSONResponse(content={"error": f"An unexpected error occurred: {str(e)}"}, status_code=500)
-
 
 @app.get("/",
          summary="Root Endpoint",
