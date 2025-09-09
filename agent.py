@@ -285,7 +285,7 @@ Based on this complete logic, analyze the text. Your output must be a single, co
         async_execution=False,
         expected_output="""A single sentence stating which of the topics (Vaccines, GMOs, 5G) were detected as being part of a promoted conspiracy theory.
 For example: "A conspiracy theory related to Vaccines was detected." or "Conspiracy theories related to GMOs and 5G were detected."
-If the text is debunking a theory, is neutral, or no conspiracy is promoted, your response must be "No common medical conspiracy topics were detected."
+If the text is debunking a theory, is neutral, or no conspiracy is promoted, your response must be "No common conspiracy topics were detected."
 """
     )
 

@@ -13,9 +13,9 @@ env:
   DOCKER_IMAGE_NAME: test0198/disinfo-analysis-api
   # GCP project ID and Cloud Run service details
   # IMPORTANT: Replace with your actual GCP project ID, Cloud Run service name, and region
-  GCP_PROJECT_ID: your-gcp-project-id
-  CLOUD_RUN_SERVICE: your-cloud-run-service-name
-  CLOUD_RUN_REGION: your-cloud-run-region
+  GCP_PROJECT_ID: gen-lang-client-0699360652
+  CLOUD_RUN_SERVICE: disinfo-analysis-api
+  CLOUD_RUN_REGION: europe-west1
 
 jobs:
   build-and-push:
