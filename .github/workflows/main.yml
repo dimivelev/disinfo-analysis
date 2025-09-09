@@ -61,28 +61,31 @@ jobs:
           cache-from: type=inline
           cache-to: type=inline,mode=max
 
-  deploy-to-cloud-run:
-    name: Deploy to Cloud Run
-    # This job depends on the successful completion of the build-and-push job
-    needs: build-and-push
-    runs-on: ubuntu-latest
+deploy-to-cloud-run:
+  name: Deploy to Cloud Run
+  # This job depends on the successful completion of the build-and-push job
+  needs: build-and-push
+  runs-on: ubuntu-latest
 
-    # Add permissions for the job to get an OIDC token from GitHub
-    permissions:
-      contents: 'read'
-      id-token: 'write'
+  # Add permissions for the job to get an OIDC token from GitHub
+  permissions:
+    contents: 'read'
+    id-token: 'write'
 
-    steps:
-      - name: Authenticate to Google Cloud
-        uses: google-github-actions/auth@v2
-        with:
-          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
-          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+  steps:
+    - name: Authenticate to Google Cloud
+      uses: google-github-actions/auth@v2
+      with:
+        # The provider you created in GCP that trusts GitHub Actions
+        workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+        # The service account that GitHub will impersonate
+        service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
 
-      - name: Deploy to Cloud Run
-        run: |-
-          gcloud run deploy ${{ env.CLOUD_RUN_SERVICE }} \
-            --image ${{ env.DOCKER_IMAGE_NAME }}:latest \
-            --region ${{ env.CLOUD_RUN_REGION }} \
-            --platform managed \
-            --quiet
+    - name: Deploy to Cloud Run
+      run: |-
+        gcloud run deploy ${{ env.CLOUD_RUN_SERVICE }} \
+          --image ${{ env.DOCKER_IMAGE_NAME }}:latest \
+          --region ${{ env.CLOUD_RUN_REGION }} \
+          --project ${{ env.GCP_PROJECT_ID }} \
+          --platform managed \
+          --quiet

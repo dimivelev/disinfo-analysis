@@ -1,4 +1,4 @@
-Disinfo-Analysis-Crew
+Disinformation Analysis Browser Extension
 
 
 A powerful, multi-agent AI system designed to analyze web content for disinformation, bias, and emotional manipulation. This project combines a sophisticated FastAPI backend with a user-friendly Chrome extension to deliver real-time insights directly in your browser.
@@ -57,12 +57,6 @@ A .env file with your API keys.
 Installation
 
 Clone the repository:
-
-code
-Bash
-download
-content_copy
-expand_less
 
 git clone https://github.com/your-username/disinfo-analysis-api.git
 cd disinfo-analysis-api
