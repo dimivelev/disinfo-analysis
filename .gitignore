@@ -5,7 +5,7 @@
 .env
 
 # --- PYTHON ---
-# Ignore virtual environment folders
+# Ignore virtual environment folders.
 env/
 venv/
 .venv/

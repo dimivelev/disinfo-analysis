@@ -22,7 +22,7 @@ The system is architected with two primary components: a Chrome Extension (Front
     *   Headline Analyzer: Detect if headline is clickbait.
     *   Emotional Manipulation Analyst: Identifies and quantifies the use of emotionally charged language intended to manipulate the reader.
     *   Bias Detection Analyst: Assesses the text for political bias, classifying it as Left-Leaning, Centrist, or Right-Leaning.
-    *   Medical Disinformation Detector: Scans the content for common traits and patterns found in conspiracy theories.
+    *   Conspiracy Theory Detector: Scans the content for common traits and patterns found in conspiracy theories.
 4.  Display of Results: The consolidated analysis is streamed back to the Chrome extension in real-time and presented to the user in a clean, easy-to-understand format.
 
 🛠️ Tech Stack

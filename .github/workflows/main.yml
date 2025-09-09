@@ -88,6 +88,6 @@ jobs:
             --region ${{ env.CLOUD_RUN_REGION }} \
             --project ${{ env.GCP_PROJECT_ID }} \
             --platform managed \
-            --quiet
+            --quiet \
             --service-account ${{ secrets.GCP_SERVICE_ACCOUNT }}
 
