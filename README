@@ -1,0 +1,99 @@
+Disinfo-Analysis-Crew
+
+
+A powerful, multi-agent AI system designed to analyze web content for disinformation, bias, and emotional manipulation. This project combines a sophisticated FastAPI backend with a user-friendly Chrome extension to deliver real-time insights directly in your browser.
+
+🌟 Features
+
+Multi-Agent AI Analysis: Utilizes a crew of specialized AI agents (powered by CrewAI) to perform a comprehensive analysis of web page content.
+
+Real-time Insights: Get immediate feedback on the content you're reading without leaving the page.
+
+Browser Integration: A seamless experience through a dedicated Chrome Extension.
+
+CI/CD Pipeline: Automated build, testing, and deployment pipeline using GitHub Actions.
+
+Scalable Backend: Built with FastAPI, ensuring high performance and scalability.
+
+🚀 How It Works
+
+The system is composed of two main components: a Chrome Extension and a FastAPI backend.
+
+Chrome Extension: The user initiates an analysis from the popup. The extension then captures the HTML of the current page.
+
+FastAPI Backend: The HTML is sent to the backend, which parses it to extract the headline and body content.
+
+AI Crew Analysis: The extracted text is then passed to a team of AI agents, each with a specific role:
+
+Headline Analyzer: Checks for clickbait.
+
+Emotional Manipulation Analyst: Detects emotionally charged language.
+
+Bias Detection Analyst: Identifies political bias (Left, Center, Right).
+
+Medical Detector: Scans for common conspiracy theory traits.
+
+Results: The analysis results are streamed back to the Chrome extension and displayed to the user in a clear, easy-to-understand format.
+
+🛠️ Tech Stack
+
+Backend: Python, FastAPI, CrewAI, PyTorch, Transformers
+
+Frontend: HTML, CSS, JavaScript (Chrome Extension)
+
+CI/CD: Docker, GitHub Actions, Google Cloud Run
+
+🏁 Getting Started
+Prerequisites
+
+Python 3.9+
+
+Docker
+
+Google Cloud SDK (for deployment)
+
+A .env file with your API keys.
+
+Installation
+
+Clone the repository:
+
+code
+Bash
+download
+content_copy
+expand_less
+
+git clone https://github.com/your-username/disinfo-analysis-api.git
+cd disinfo-analysis-api
+
+Set up the backend:
+
+Create and activate a virtual environment.
+
+Install dependencies: pip install -r requirements.txt
+
+Run the server: uvicorn main:app --reload
+
+Load the Chrome Extension:
+
+Open Chrome and navigate to chrome://extensions.
+
+Enable "Developer mode".
+
+Click "Load unpacked" and select the extension's directory.
+
+🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a pull request or open an issue for any bugs, feature requests, or improvements.
+
+📄 License
+
+This project is licensed under the MIT License. See the LICENSE file for details.
+
+Google Search Suggestions
+Display of Search Suggestions is required when using Grounding with Google Search. Learn more
+good README examples for full-stack AI projects
+best practices for writing README files github
+README template for FastAPI and Chrome Extension project
+how to add badges to README.md
