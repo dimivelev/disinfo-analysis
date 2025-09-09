@@ -1,6 +1,4 @@
-# .github/workflows/main.yml
-
-name: CI/CD - Build and Push Docker Image
+name: CI/CD - Build and Push Docker Image and Deploy to Cloud Run
 
 # This workflow runs on every push to the 'main' branch
 on:
@@ -13,6 +11,11 @@ env:
   # The name of your Docker Hub repository
   # IMPORTANT: Replace 'your-username' with your actual Docker Hub username
   DOCKER_IMAGE_NAME: test0198/disinfo-analysis-api
+  # GCP project ID and Cloud Run service details
+  # IMPORTANT: Replace with your actual GCP project ID, Cloud Run service name, and region
+  GCP_PROJECT_ID: your-gcp-project-id
+  CLOUD_RUN_SERVICE: your-cloud-run-service-name
+  CLOUD_RUN_REGION: your-cloud-run-region
 
 jobs:
   build-and-push:
@@ -57,3 +60,29 @@ jobs:
           # Enable caching to speed up future builds
           cache-from: type=inline
           cache-to: type=inline,mode=max
+
+  deploy-to-cloud-run:
+    name: Deploy to Cloud Run
+    # This job depends on the successful completion of the build-and-push job
+    needs: build-and-push
+    runs-on: ubuntu-latest
+
+    # Add permissions for the job to get an OIDC token from GitHub
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    steps:
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+      - name: Deploy to Cloud Run
+        run: |-
+          gcloud run deploy ${{ env.CLOUD_RUN_SERVICE }} \
+            --image ${{ env.DOCKER_IMAGE_NAME }}:latest \
+            --region ${{ env.CLOUD_RUN_REGION }} \
+            --platform managed \
+            --quiet

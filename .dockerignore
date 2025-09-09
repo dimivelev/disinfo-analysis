@@ -13,7 +13,7 @@ __pycache__/
 env/
 venv/
 .env
-
+extension/
 test/
 # Docker
 Dockerfile
