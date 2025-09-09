@@ -1,6 +1,6 @@
 # Dockerfile
 
-# Stage 1: Build the application and download models
+# Stage 1: Build the application and download models.
 FROM python:3.12.7 as builder
 
 # Set environment variables

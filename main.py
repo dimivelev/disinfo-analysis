@@ -43,11 +43,6 @@ async def run_crew_and_stream(inputs: dict):
         yield f"data: {json.dumps({'status': 'Analysis complete! Collecting results...', 'type': 'update'})}\n\n"
         await asyncio.sleep(0.1)
 
-        # ===================================================================
-        # --- START OF THE FIX ---
-        # We now safely check if each task produced an output before accessing it.
-        # This prevents the server from crashing if an agent fails.
-        # ===================================================================
         def get_safe_output(task):
             """Helper function to safely get raw output from a task."""
             if task and task.output and hasattr(task.output, 'raw'):
@@ -61,10 +56,7 @@ async def run_crew_and_stream(inputs: dict):
             'Bias Detection Analyst': get_safe_output(crew.tasks[2]),
             'Medical Detector': get_safe_output(crew.tasks[3])
         }
-        # ===================================================================
-        # --- END OF THE FIX ---
-        # ===================================================================
-
+      
         final_data = {"source": "chrome-extension", "analysis_result": all_results}
         yield f"data: {json.dumps({'result': final_data, 'type': 'result'})}\n\n"
 

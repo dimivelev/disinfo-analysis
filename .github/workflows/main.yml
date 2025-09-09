@@ -89,3 +89,5 @@ jobs:
             --project ${{ env.GCP_PROJECT_ID }} \
             --platform managed \
             --quiet
+            --service-account ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
