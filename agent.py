@@ -240,57 +240,53 @@ def create_disinfo_crew():
     )
 
     medical_task = Task(
-        description="""Analyze the following text: "{body}".
+    description="""Analyze the following text: "{body}".
 
+Your task is to determine if the text actively promotes or argues in favor of conspiracy theories about **Vaccines, GMOs, or 5G**. To do this, you must first understand and identify the core traits of conspiratorial thinking.
 
-You are tasked with identifying the trait of conspiratorial thinking in a given piece of text.
-You have the following traits to choose from: Contradictory, Overriding suspicion, Nefarious
-intent, Persecuted victim, Immune to evidence, and Re-interpreting randomness.
-Here are definitions of the traits and what to look for in each one:
-Contradictory: Conspiracy theorists can simultaneously believe in ideas that are mutually
-contradictory. For example, believing the theory that Princess Diana was murdered, while
-also believing that she faked her own death. This is because the theorists’ commitment to
-disbelieving the “official” account is so absolute, it doesn’t matter if their belief system is
-incoherent. What to look for: The author expresses beliefs that are mutually exclusive. A
-and B cannot both be true at the same time. But they express belief in both A and B as a
-means to counter popular opinion/the official account.
-Overriding suspicion: Conspiratorial thinking involves a nihilistic degree of skepticism towards the official account. This extreme degree of suspicion prevents belief in anything that
-doesn’t fit into the conspiracy theory. What to look for: Extreme/illogical distrust for official
-accounts, a nihilistic degree of skepticism (such as officials being deceptive, incompetent,
-lacking information, willfully ignorant, etc), Synonyms for lies/lying – “Scamdemic”, or
-gullibility, “sheep” not wanting to know the truth , ignorance due to complacency, sarcasm
-or mocking of officials/institutions, quotations like “Climate scientist,” The global “crisis”
-Nefarious intent: The motivations behind any presumed conspiracy are invariably assumed to
-be nefarious. Conspiracy theories never propose that the presumed conspirators have benign
-motivations. What to look for: mention of evil motivations such as greed, hatred, some kind
-of indoctrination (i.e. a cult/nazism), lack of empathy, etc. The author’s interpretation might
-be implicit or explicit.
-Persecuted victim: Conspiracy theorists perceive and present themself as the victim of organized persecution. At the same time, they see themself as brave antagonists taking on the
-villainous conspirators. Conspiratorial thinking involves a self-perception of simultaneously
-being a victim and a hero. What to look for: the author paints themselves or their in-group
-as the victim/the hero, the author identifies with the favorable side/the good guys in their
-narrative. They use terms/words like us, the American people, non-snowflakes, etc.
-Immune to evidence: Conspiracy theories are inherently self-sealing—evidence that counters a theory is re-interpreted as originating from the conspiracy. This reflects the belief that
-the stronger the evidence against a conspiracy (e.g., the FBI exonerating a politician from
-allegations of misusing a personal email server), the more the conspirators must want people
-to believe their version of events (e.g., the FBI was part of the conspiracy to protect that
-politician). What to look for: Evidence that undermines the conspiracy theory is repurposed
-as part of the conspiracy. The author implies others are “in on it”. The author references/introduces evidence and refutes it by dismissal, alternative truth/science/evidence, common
-sense, etc. They may also attack the source of the evidence. They may also deny commonly
-accepted knowledge without directly referencing it
-Re-interpreting randomness: The overriding suspicion found in conspiratorial thinking frequently results in the belief that nothing occurs by accident. Small random events, such as
-intact windows in the Pentagon after the 9/11 attacks, are re-interpreted as being caused by
-the conspiracy (because if an airliner had hit the Pentagon, then all windows would have
-shattered and are woven into a broader, interconnected pattern. What to look for: The article
-uses some event(s) and connects it/them to a larger conspiracy to support their narrative. Ask
-yourself – Did the event(s) likely occur by chance? Did the event(s) likely occur independently of the conspiracy and/or each other?
+---
+### Analytical Framework: The Traits of Conspiratorial Thinking
 
+Use these definitions to guide your analysis. A text promotes a conspiracy if it exhibits one or more of these traits in its argument *against* Vaccines, GMOs, or 5G.
 
-Based on this logic, analyze the text. Your output must be a single, concise sentence. Do not provide any explanation, reasoning, or thought processes.
+*   **Contradictory:** The author believes in ideas that are mutually exclusive to discredit the official account (e.g., "the virus is a hoax, but it's also a bio-weapon").
+*   **Overriding Suspicion:** The author shows extreme, nihilistic skepticism towards official sources, using terms like "scamdemic," "sheeple," or mocking official institutions.
+*   **Nefarious Intent:** The author assumes the motivations behind a policy or technology are evil (e.g., "vaccines are for depopulation and greed").
+*   **Something Must Be Wrong:** The author refuses to accept the official story, believing it's a cover-up. Even without a clear alternative, the default assumption is that the official account is false.
+*   **Persecuted Victim:** The author portrays themself or their in-group as brave victims fighting against villainous conspirators (e.g., "It's us against the globalist elites").
+*   **Immune to Evidence:** Evidence that counters the theory is dismissed or re-interpreted as being part of the conspiracy itself.
+*   **Re-interpreting Randomness:** Random events are woven into a broader, interconnected pattern to support the narrative (e.g., "it's no coincidence that...").
+
+---
+### Application and Examples
+
+Now, apply this framework. It is crucial to distinguish between text that *promotes* a conspiracy (and exhibits the traits above) and text that *discusses or debunks* one.
+
+*   **Example 1: Promoting a conspiracy**
+    *   **Input Text:** "They are putting microchips in the vaccines to control the population. The 5G towers are used to activate them. It's a depopulation agenda!"
+    *   **Analysis:** This shows 'Nefarious Intent' and 'Re-interpreting Randomness'.
+    *   **Correct Output:** Conspiracy theories related to Vaccines and 5G were detected.
+
+*   **Example 2: Debunking a conspiracy (DO NOT FLAG)**
+    *   **Input Text:** "A common myth is that GMOs are unsafe, but decades of scientific research have shown they are safe. Claims about 'nefarious intent' from corporations lack scientific evidence."
+    *   **Analysis:** This text *mentions* conspiratorial traits but rejects them. It does not exhibit the traits itself.
+    *   **Correct Output:** No common medical conspiracy topics were detected.
+
+*   **Example 3: Neutral/Scientific Text (DO NOT FLAG)**
+    *   **Input Text:** "The mRNA vaccine works by teaching our cells how to make a protein that triggers an immune response inside our bodies."
+    *   **Analysis:** This text shows none of the conspiratorial traits.
+    *   **Correct Output:** No common medical conspiracy topics were detected.
+---
+
+**Final Instruction:**
+Based on this complete logic, analyze the text. Your output must be a single, concise sentence. Do not provide any explanation, your reasoning, or the traits you identified.
 """,
         agent=medical_agent,
         async_execution=False,
-        expected_output='A single sentence stating which of the topics (Vaccines, GMOs, 5G) were detected as being part of a conspiracy theory. For example: "A conspiracy theory related to Vaccines was detected." If none are found, your response must be "No common conspiracy topics were detected."'
+        expected_output="""A single sentence stating which of the topics (Vaccines, GMOs, 5G) were detected as being part of a promoted conspiracy theory.
+For example: "A conspiracy theory related to Vaccines was detected." or "Conspiracy theories related to GMOs and 5G were detected."
+If the text is debunking a theory, is neutral, or no conspiracy is promoted, your response must be "No common medical conspiracy topics were detected."
+"""
     )
 
     # --- SETUP AND RETURN THE NEW CREW ---
