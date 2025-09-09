@@ -16,7 +16,7 @@ class HtmlPayload(BaseModel):
 app = FastAPI(
     title="Disinformation Analysis API",
     description="An API that accepts an HTML payload and analyzes its content for disinformation using a multi-agent CrewAI system.",
-    version="1.0.3" # Incremented version
+    version="1.0.3" # Incremented version.
 )
 
 app.add_middleware(

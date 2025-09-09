@@ -53,7 +53,7 @@ RUN useradd -m -u 1000 user
 USER user
 WORKDIR /home/user/app
 
-# Copy installed packages and downloaded models from the builder stage
+# Copy installed packages and downloaded models from the builder stage.
 COPY --from=builder /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages
 COPY --from=builder /home/user/app/.cache /home/user/app/.cache
 COPY --from=builder /home/user/app/.spacy /home/user/app/.spacy

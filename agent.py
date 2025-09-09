@@ -24,7 +24,6 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification # Imp
 # Load environment variables from a .env file
 load_dotenv()
 
-# --- This part can remain global as it is stateless configuration ---
 llm = LLM(
     api_key=os.getenv("API"),
     model="gemini/gemini-2.5-flash",
@@ -32,7 +31,6 @@ llm = LLM(
     top_p=0.9
 )
 
-# --- TOOL DEFINITIONS (No changes needed here) ---
 
 class HeadlineSimilarityInput(BaseModel):
     headline: str = Field(description="The headline text of the article")
@@ -40,7 +38,6 @@ class HeadlineSimilarityInput(BaseModel):
 
 class HeadlineSimilarityTool(BaseTool):
     
-    # ... (no changes in the tool's code) ...
     name: str = "HeadlineSimilarity"
     description: str = "Computes semantic similarity between a headline and body text using a scientifically-backed sentence embedding model."
     args_schema: Type[BaseModel] = HeadlineSimilarityInput
@@ -57,19 +54,14 @@ class HeadlineSimilarityTool(BaseTool):
         with torch.no_grad():
             output = model(**encoded_input)
 
-    # The output contains the logits
         logits = output.logits
 
-    # Apply softmax to the logits to get probabilities
         probabilities = F.softmax(logits, dim=1)
 
-    # Get the probability of the predicted class
         predicted_probability, predicted_class_index = torch.max(probabilities, dim=1)
 
-    # The model's config tells us the labels: id2label: {0: 'not clickbait', 1: 'clickbait'}
         predicted_label = model.config.id2label[predicted_class_index.item()]
     
-    # Format the output string
         return f"Detected class: {predicted_label} (Probability: {predicted_probability.item():.2%})"
 
 
@@ -111,35 +103,28 @@ class BiasDetectionTool(BaseTool):
     args_schema: Type[BaseModel] = BiasDetectionInput
 
     def _run(self, text: str) -> str:
-# Replace "test0198/modernbert-political-bias" with your actual repository ID on the Hugging Face Hub
         model_name = "Faith1712/Political-bias-ModernBERT-base"
 
-# Load the tokenizer and model from the Hub
         tokenizer = AutoTokenizer.from_pretrained(model_name)
         model = AutoModelForSequenceClassification.from_pretrained(model_name)
 
-# Assuming you have a GPU available, move the model to the GPU
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         model.to(device)
 
         
-# Tokenize the text
         inputs = tokenizer(text, return_tensors="pt", truncation=True, padding=True, max_length=8000)
 
-# Move the input tensors to the same device as the model
         inputs = {key: value.to(device) for key, value in inputs.items()}
 
-# Get the model's output (logits)
         with torch.no_grad():
             outputs = model(**inputs)
             logits = outputs.logits
 
-# Get the predicted class index
+
         predicted_class_id = torch.argmax(logits, dim=1).item()
 
-# Map the predicted class index to a label (you'll need to know the mapping from your training data)
-# For example, if 0=left, 1=center, 2=right, you would use a dictionary:
-        label_map = {0: "Left", 1: "Center", 2: "Right"} # Replace with your actual label mapping
+
+        label_map = {0: "Left", 1: "Center", 2: "Right"} 
         predicted_label = label_map.get(predicted_class_id, "Unknown")
 
         return predicted_label
